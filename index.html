@@ -3,35 +3,30 @@
 
 	<head>
 		<title>JavaScript Course - Ex1</title>
-		<link rel="stylesheet" type="text/css" href="css/index.css" /> 
+		<link rel="stylesheet" type="text/css" href="index.css" />
+		<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous"> -->
+		
 	</head>
 	
 	
 	<body>
-		<div  class='title'>a title</div>
 
-		<img id='page_image' src = 'https://as2.ftcdn.net/v2/jpg/04/51/27/51/500_F_451275186_JTdFEilKxJDl7HJBfUDxvGCBTsJKh6EV.jpg'>
+	<div id="Container">
+		<div id="disk1"></div>
+		<div id="disk2"></div>
+		<div id="disk3"></div>
+		<div id="disk4"></div>
+	</div>
 
-		<div class = 'std-div' id='poem'>
-			<div class='title'>Some Text</div>
-			<div>
-				the text,<br>
-   				the text,<br>
-			</div>
+		<button id='btn_start'>Start</button>
+		<button id='btn_stop'>Stop</button>
+		<button id='btn_reset'>Reset</button>
+
+		<div id='div_value'>Not Started...</div>
+
 		</div>
-
-		<div class = 'std-div'  id='question'>
-			<div  class='title'>Did you like it?</div>
-		
-			<form>
-				<input type='radio' value='Yes' name='radio-like'>Yes
-				<input type='radio' value='No' name='radio-like'>No
-			</form>
-
-			<button id='btnSubmit'>Submit</button>
-		</div>
-
-
 	</body>
+
+	<script src="index.js"></script>
 	
 </html>
