@@ -1,28 +1,39 @@
+
+
+//****** CONSTANTS ******//
+const DISK1 = "disk1";
+const DISK2 = "disk2";
+const DISK3 = "disk3";
+const DISK4 = "disk4";
+const POS = "pos";
+//**********************//
+
+//****** VARIABLES ******//
 let id = null;
 let enabled = true;
 let counter = 0;
-
 const btn_start = document.querySelector( '#btn_start');
-btn_start.addEventListener( 'click', handle_start);
-
 const btn_stop = document.querySelector( '#btn_stop');
-btn_stop.addEventListener( 'click', handle_stop);
-
 const btn_reset = document.querySelector( '#btn_reset');
-btn_reset.addEventListener( 'click', handle_reset);
-
 const div_value = document.querySelector('#div_value');
+//**********************//
 
+btn_start.addEventListener( 'click', handle_start);
+btn_stop.addEventListener( 'click', handle_stop);
+btn_reset.addEventListener( 'click', handle_reset);
+document.getElementById(DISK1).setAttribute(POS,0);
+document.getElementById(DISK2).setAttribute(POS,0);
+document.getElementById(DISK3).setAttribute(POS,0);
+document.getElementById(DISK4).setAttribute(POS,0);
+
+
+//****** FUNCTIONS ******//
 function handle_start()
 {
-    // if ( !timer_id )
-    //     timer_id = window.setInterval(  handle_tick, 100 )
-    // enabled = true  
-
       let elem = document.getElementById("disk1");   
-      let pos = 0;
+      let pos = elem.getAttribute("pos");
       clearInterval(id);
-      id = setInterval(move, 10);
+      id = setInterval(move, 1);
       function move()
       {
         if(enabled == true)
@@ -35,7 +46,6 @@ function handle_start()
             elem.style.left = pos + 'px'; 
           }
         }
-
       }  
       enabled = true; 
 }
@@ -60,4 +70,3 @@ function handle_tick()
     counter++;
     div_value.innerHTML = counter;
 }
-
