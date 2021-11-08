@@ -13,21 +13,3 @@
     position: absolute;
     background: radial-gradient(50% 50%,rgba(255,128,128,1), rgba(255,64,64,1) 60%, rgba(255,0,0,1) 95%, rgba(255,255,255,0));
   }
-
-
-  #disk1 {
-
-  }
-
-  #disk2 {
-    right: 0;
-  }
-  
-  #disk3 {
-    bottom: 0;
-  }
-
-  #disk4 {
-    right: 0;
-    bottom: 0;
-  }

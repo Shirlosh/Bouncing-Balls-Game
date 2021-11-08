@@ -18,6 +18,7 @@ const btn_start = document.querySelector( '#btn_start');
 const btn_stop = document.querySelector( '#btn_stop');
 const btn_reset = document.querySelector( '#btn_reset');
 const div_value = document.querySelector('#div_value');
+const rectangle = document.querySelector( '#Rectangle');
 //**********************//
 
 btn_start.addEventListener( 'click', handle_start);
@@ -26,10 +27,11 @@ btn_reset.addEventListener( 'click', handle_reset);
 create_disk_array(4);
 
 
-function ball(name) {
+function Disk(name) {
   
   this.obj = document.getElementById(name);
   this.pos = 0; 
+  this.radius = this.obj.offsetWidth/2;
 
   this.move= function() {
     if(enabled == true)
@@ -46,7 +48,6 @@ function ball(name) {
 }
 
 
-
 //****** FUNCTIONS ******//
 function create_disk_array(size)
 {
@@ -57,10 +58,50 @@ function create_disk_array(size)
     elem.setAttribute("id", name);
     elem.setAttribute("class", "disk"); 
     document.getElementById("Rectangle").appendChild(elem);
-    disks.push(new ball(name));
+    disks.push(new Disk(name));
+    
+    init_disk_position(disks[i-1]);
   }
 }
 
+function init_disk_position(disk)
+{
+  if(disk.obj.id === 'disk1')
+  {
+    disk.obj.style.top = 0 + 'px';
+    disk.obj.style.left = random_width();
+  }
+
+  else if(disk.obj.id === 'disk2')
+  {
+    disk.obj.style.top =  random_height();
+    disk.obj.style.left = 0 + 'px';
+  }
+
+  else if(disk.obj.id === 'disk3')
+  {
+    disk.obj.style.top =  rectangle.clientHeight - 2*disk.radius + 'px';
+    disk.obj.style.left = random_width();
+  }
+
+  else if(disk.obj.id === 'disk4')
+  {
+    disk.obj.style.top = random_height();
+    disk.obj.style.left =  rectangle.clientWidth - 2*disk.radius + 'px';
+  }
+}
+
+function random_width()
+{
+  let radius = disks[0].radius;
+  return (2*radius + Math.random()*(1000 % (rectangle.clientWidth - 2*radius))) + 'px';
+}
+
+function random_height()
+{
+  let radius = disks[0].radius;
+  return (2*radius + Math.random()*(1000 % (rectangle.clientHeight - 2*radius))) + 'px';
+}
 
 function handle_start()
 {
