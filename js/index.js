@@ -32,18 +32,21 @@ create_disk_array(4);
 function Disk(name) {
   
   this.obj = document.getElementById(name);
-  this.pos = 0; 
+  this.pos = 1; 
   this.radius = this.obj.offsetWidth/2;
 
+
+  /// TODO : change condition(pos == 350) to some function thats check if reachead to the last ball
+  /// if reached board limitation bound to the other direction 
   this.move= function() {
     if(enabled == true)
     {
       if (this.pos == 350) {
         clearInterval(disk_id);
       } else {
-        this.pos++; 
-        this.obj.style.top = this.pos + 'px'; 
-        this.obj.style.left = this.pos + 'px'; 
+        //this.pos++; 
+        this.obj.style.top = parseInt(this.obj.style.top, 10) + this.pos + 'px'; 
+        this.obj.style.left = parseInt(this.obj.style.left, 10) + this.pos + 'px'; 
       }
     }
   }
@@ -51,6 +54,8 @@ function Disk(name) {
 
 
 //****** FUNCTIONS ******//
+
+// create disks dynamic array where each cell contain a disk
 function create_disk_array(size)
 {
   for(let i = 1; i <= size; i++) 
@@ -68,7 +73,6 @@ function create_disk_array(size)
 
 //randomize a disk position
 //each disk get has own rectangle line
-
 function init_disk_position(disk)
 {
   if(disk.obj.id === 'disk1')
@@ -113,13 +117,15 @@ function random_height()
 
 function handle_start()
 {
-
     if (init_time_limit())
     {      
       clearInterval(disk_id);
       clearInterval(timer_id);    
       timer_id = window.setInterval(handle_tick, 100)
-      disk_id = window.setInterval(function() { disks[0].move(); }, 1);  
+      
+      disk_id = window.setInterval(function() {
+         disks.forEach(disk => disk.move()); 
+        }, 1);  
     }
     enabled = true; 
 }
@@ -174,9 +180,10 @@ function init_time_limit()
         return false;
 			}
 		}
+    time = Number(time);
   }
 
-  time_limit = Number(time);
+  time_limit = time;
   return true;
 }
 
