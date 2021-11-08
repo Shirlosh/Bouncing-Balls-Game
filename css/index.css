@@ -1,42 +1,33 @@
-#Rectangle {
-    width: 400px;
-    height: 400px;
+#Rectangle 
+{
+    width: 100%;  
+    height: 35rem;
     position: relative;
-    background: rgb(255, 226, 173);
+    background: #ff8;
   }
   
-  #disk1 {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
+  .disk {
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
     position: absolute;
-    background: red;
+    background: radial-gradient(50% 50%,rgba(255,128,128,1), rgba(255,64,64,1) 60%, rgba(255,0,0,1) 95%, rgba(255,255,255,0));
+  }
+
+
+  #disk1 {
+
   }
 
   #disk2 {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    position: absolute;
-    background: red;
     right: 0;
   }
   
   #disk3 {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    position: absolute;
-    background: red;
     bottom: 0;
   }
 
   #disk4 {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    position: absolute;
-    background: red;
     right: 0;
     bottom: 0;
   }
