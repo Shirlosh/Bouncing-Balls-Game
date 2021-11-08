@@ -13,12 +13,14 @@ let disk_id = null;
 let timer_id = null;
 let enabled = true;
 let counter = 0;
+
 let disks = new Array();
 const btn_start = document.querySelector( '#btn_start');
 const btn_stop = document.querySelector( '#btn_stop');
 const btn_reset = document.querySelector( '#btn_reset');
 const div_value = document.querySelector('#div_value');
 const rectangle = document.querySelector( '#Rectangle');
+let time_limit = null;
 //**********************//
 
 btn_start.addEventListener( 'click', handle_start);
@@ -64,6 +66,9 @@ function create_disk_array(size)
   }
 }
 
+//randomize a disk position
+//each disk get has own rectangle line
+
 function init_disk_position(disk)
 {
   if(disk.obj.id === 'disk1')
@@ -91,12 +96,15 @@ function init_disk_position(disk)
   }
 }
 
+// randomize a value from 0 to max rectangle width
 function random_width()
 {
   let radius = disks[0].radius;
   return (2*radius + Math.random()*(1000 % (rectangle.clientWidth - 2*radius))) + 'px';
 }
 
+
+// randomize a value from 0 to max rectangle height
 function random_height()
 {
   let radius = disks[0].radius;
@@ -105,9 +113,14 @@ function random_height()
 
 function handle_start()
 {
-    clearInterval(disk_id);
-    timer_id = window.setInterval(handle_tick, 100 )
-    disk_id = window.setInterval(function() { disks[0].move(); }, 1);
+
+    if (init_time_limit())
+    {      
+      clearInterval(disk_id);
+      clearInterval(timer_id);    
+      timer_id = window.setInterval(handle_tick, 100)
+      disk_id = window.setInterval(function() { disks[0].move(); }, 1);  
+    }
     enabled = true; 
 }
 
@@ -117,17 +130,53 @@ function handle_stop()
     enabled = false
 }
 
+
 function handle_reset()
 {
     if ( !disk_id ) return;
     enabled = false;
     counter = 0;
+    disks.forEach(disk => {
+      init_disk_position(disk);  
+    });
     div_value.innerHTML = 'Not Started...';
 }
 
+// increase the tick counter
+// prints the counter to the screen
 function handle_tick()
 {
     if ( !enabled) return;
-    counter++;
-    div_value.innerHTML = counter;
+    if(counter === time_limit) handle_stop();
+    else 
+    {
+      counter++;
+      div_value.innerHTML = counter;
+    }
 }
+
+
+//returns true if time limit is valid
+//otherwise returns false
+function init_time_limit()
+{
+  let time = document.querySelector( '#time_limit').value;
+
+  if(time)
+  {
+    for( let i = 0 ; i < time.length ; i++)
+		{
+			const digit = time[i];
+			if ( digit < '0' || digit > '9')
+			{
+				alert('please enter only numbers')
+				time_limit = null;
+        return false;
+			}
+		}
+  }
+
+  time_limit = Number(time);
+  return true;
+}
+
