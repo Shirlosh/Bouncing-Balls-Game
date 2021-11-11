@@ -2,29 +2,35 @@
 <html>
 
 	<head>
+		<meta name = "viewport" content = "width=device-width">
 		<title>JavaScript Course - Ex1</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
 		<link rel="stylesheet" type="text/css" href="css/index.css" />
-		<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous"> -->
+  <head>
 		
 	</head>
 	
 	<body>
-
-	<div id="Rectangle">
-	</div>
-
-	<div style="text-align: center;">
-		<br>
-		<label for="time_limit">Time Limitation:</label>
-		<input type="text" id="time_limit">
-			<button id="btn_start">Start</button>
-			<button id="btn_stop">Stop</button>
-			<button id="btn_reset">Reset</button>
-			<br>
-			<div id="div_value">Not Started...</div>
-	</div>
-
-		</div>
+		<div id="container" class="text-center">
+			<div id="message"></div>
+			
+	  
+	  
+			<div class="btn-group" role="group" aria-label="Basic example">
+			  <button id='btn_start' class='btn btn-outline-light'>Start</button>
+			  <button id='btn_pause' class='btn btn-outline-light'>Pause</button>
+			  <button id='btn_reset' class='btn btn-outline-light'>Reset</button>
+			  <label for="time_limit" class="form-label"></label>
+			  <input type="text" class="form-control" id="time_limit" placeholder="Type Game Time In Ms.">
+	  
+			  <div id="timer"></div>
+			</div>
+			<div id="disk1"></div>
+			<div id="disk2"></div>
+			<div id="disk3"></div>
+			<div id="disk4"></div>
+		  </div>
 	</body>
 
 	<script src="js/index.js"></script>
