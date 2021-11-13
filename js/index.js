@@ -34,13 +34,6 @@ function setBoard() {
 }
 window.onload = setBoard;
 
-function startGame() {
-  // init random speed
-  for (let i = 0; i < disks.length; i++) {
-    disks[i].speed.x = 1000 * (Math.random() - 0.5);
-    disks[i].speed.y = 1000 * (Math.random() - 0.5);
-  }
-}
 
 function handle_start() {
   if (pause === true) {
@@ -60,8 +53,7 @@ function handle_start() {
           handleTimeCheck();
         }
       }, 10);
-
-      startGame();
+      
     }
   }
 }
@@ -96,7 +88,7 @@ function Disk(name) {
   this.pos = init_disk_position(this);
 
   // init speed
-  this.speed = { x: 0, y: 0 };
+  this.speed = { x: 1000 * (Math.random() - 0.5), y: 1000 * (Math.random() - 0.5) };
 
   // Update time
   var time = (new Date()).getTime() / 1000;
