@@ -1,5 +1,4 @@
 let disks;
-let const_disk_array;
 let disksNames = ["disk1", "disk2", "disk3", "disk4"]
 let initialNumOfDisks = disksNames.length;
 
@@ -30,7 +29,7 @@ function setBoard() {
   disks = new Array();
 
   for (let i = 0; i < initialNumOfDisks; i++) {
-    disks.push(new ball(disksNames[i]));
+    disks.push(new Disk(disksNames[i]));
   }
 }
 window.onload = setBoard;
@@ -85,7 +84,7 @@ function resetBoard() {
   });
 }
 
-function ball(name) {
+function Disk(name) {
   // init object
   this.name = name;
   this.obj = document.getElementById(name);
@@ -175,14 +174,15 @@ function updateDisksPositions() {
 
 function checkDisksTouched() {
 
-  let j = 0;
   for (let i = 0; i < disks.length; i++) 
   {
     for (let j = i + 1; j < disks.length; j++) {
 
       if (twoDisksTouched(disks[i], disks[j])) {
+        if(generateRandomBoolean())        disks[j].Disable(true);
+        else disks[i].Disable(true);
 
-        disks[j].Disable(true)
+        if(isLastDisk()) handle_pause();
       }
     }
   }
@@ -196,6 +196,16 @@ function twoDisksTouched(disk1, disk2) {
 
 function generateRandomBoolean() {
   return Math.round(Math.random())
+}
+
+function isLastDisk()
+{
+  let cnt = 0;
+  disks.forEach(d => {
+    if (d.disable) cnt++ ;
+  });
+
+  return cnt === initialNumOfDisks - 1;
 }
 
 //returns true if time limit is valid
