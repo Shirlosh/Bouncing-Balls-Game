@@ -32,18 +32,10 @@ function setBoard()
   
   for(let i = 0; i < initialNumOfDisks; i++)
   {
-    disks.push(new ball(disksNames[i]));
+    disks.push(new Disk(disksNames[i]));
   }
 }
 window.onload = setBoard;
-
-function resetBoard()
-{
-  disks.forEach(disk => {
-    disk.pos = init_disk_position(disk);
-    disk.obj.style.visibility = "visible";
-  });
-}
 
 function startGame()
 {
@@ -95,7 +87,15 @@ function handle_reset()
   showTimer.innerHTML = counter;
 }
 
-function ball(name) {
+function resetBoard()
+{
+  disks.forEach(disk => {
+    disk.pos = init_disk_position(disk);
+    disk.obj.style.visibility = "visible";
+  });
+}
+
+function Disk(name) {
   // init object
   this.name= name;
   this.obj= document.getElementById(name);
