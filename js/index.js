@@ -1,4 +1,5 @@
 let disks;
+let const_disk_array;
 let disksNames = ["disk1", "disk2", "disk3", "disk4"]
 let initialNumOfDisks = disksNames.length;
 
@@ -9,6 +10,7 @@ const btn_reset = document.querySelector('#btn_reset');
 const showTimer = document.querySelector('#timer');
 let time_limit = null;
 let counter = 0;
+let pause = false;
 
 btn_start.addEventListener('click', handle_start);
 btn_pause.addEventListener('click', handle_pause);
@@ -35,6 +37,14 @@ function setBoard()
 }
 window.onload = setBoard;
 
+function resetBoard()
+{
+  disks.forEach(disk => {
+    disk.pos = init_disk_position(disk);
+    disk.obj.style.visibility = "visible";
+  });
+}
+
 function startGame()
 {
   // init random speed
@@ -46,41 +56,43 @@ function startGame()
 
 function handle_start()
 {
-  if (init_time_limit())
+  if(pause === true)
   {
-    alert('Game Started!', 'success')
-    showDisks();
-    window.setInterval(function(){
-      updateDisksPositions();
-      checkDisksTouched();
-      handleTimeCheck();
-  }, 10);
-  
-    if(disks.length === 0)
-    {
+    pause = false;
+  }
 
-      startGame();
-    }
-    else //Resume Game
+  else {
+
+    if (init_time_limit())
     {
-      //save disks speeds in array and restore them
-    }
-  }      
+      alert('Game Started!', 'success')
+      
+      window.setInterval(function(){
+        
+        if(pause === false)
+        {
+          updateDisksPositions();
+          checkDisksTouched();
+          handleTimeCheck();
+        }
+      }, 10);
+  
+      startGame();
+    }  
+  }  
 }
 
 function handle_pause()
 {
-  pauseDisks();
+  pause = true;
 }
 
 function handle_reset()
 {
-  // for(let i = 0; i < disks.length; i++)
-  // {
-  //   disks.pop();
-  // }
-  setBoard();
-  startGame();
+  pause = true;
+  resetBoard();
+  counter = 0;
+  showTimer.innerHTML = counter;
 }
 
 function ball(name) {
@@ -92,8 +104,8 @@ function ball(name) {
   this.containerSize= { x: this.obj.offsetParent.offsetWidth, y: this.obj.offsetParent.offsetHeight}
   this.posBoundries= { x: this.containerSize.x-this.size/2, y: this.containerSize.y-this.size/2}
   // init position
-  this.pos= {x:0, y:0} //{ x: this.radius + 1000*(Math.random()), y: this.radius + 1000*(Math.random())};
-  init_disk_position(this);
+  this.pos= init_disk_position(this);
+
   // init speed
   this.speed= { x: 0, y: 0 };  
 
@@ -153,15 +165,17 @@ function ball(name) {
 
 function updateDisksPositions()
 {
-  for(let i = 0; i < disks.length; i++)
+
+   for(let i = 0; i < disks.length; i++)
   {
-    disks[i].updatePosition();
-  }
+     disks[i].updatePosition();
+   }
 }
 
 function checkDisksTouched()
 {
-  //let removedDiskIndex = i;
+
+    //let removedDiskIndex = i;
   let j = 0;
   for(let i = 0; i < disks.length - 1; i++)
   {
@@ -180,10 +194,12 @@ function checkDisksTouched()
           removementdDiskIndex = j;
         }
         */
-        document.getElementById(disks[j].name).remove();
-        disks.splice(j, j); //remove disk[j]
+
+        disks[j].obj.style.visibility = "hidden";
+        //document.getElementById(disks[j].name).remove();
+        //disks.splice(j, j); //remove disk[j]
       }
-  }
+    }
 }
 
 function twoDisksTouched(x1, y1, radius1, x2, y2, radius2)
@@ -225,70 +241,76 @@ function init_time_limit()
 
 function handleTimeCheck()
 {
-  if(counter === time_limit)
-  {
-    handle_pause();
-  } 
-  else 
-  {
-    counter++;
-    showTimer.innerHTML = counter;
-  }
+
+    if(counter === time_limit)
+    {
+      handle_pause();
+    } 
+    else 
+    {
+      counter++;
+      showTimer.innerHTML = counter;
+    }
 }
 
-function showDisks()
-{
-  for(let i = 0; i < disks.length; i++)
-  {
-    document.getElementById(disks[i].name).style.display = "block";
-  }
-}
+// function showDisks()
+// {
+//   for(let i = 0; i < disks.length; i++)
+//   {
+//     document.getElementById(disks[i].name).style.display = "block";
+//   }
+// }
 
-function pauseDisks()
-{
-  for(let i = 0; i < disks.length; i++)
-  {
-    disks[i].speed.x = 0;
-    disks[i].speed.y = 0;
-  }
-}
+// function pauseDisks()
+// {
+//   for(let i = 0; i < disks.length; i++)
+//   {
+//     disks[i].speed.x = 0;
+//     disks[i].speed.y = 0;
+//   }
+// }
 
 function init_disk_position(disk)
 {
+  pos = {x:0,y:0};
   if(disk.obj.id === disksNames[0])
   {
-    disk.obj.style.top = 0 + 'px';
-    disk.obj.style.left = random_width(disk.radius);
+    pos.x = 0;
+    pos.y = random_width(disk.radius);
   }
 
   else if(disk.obj.id === disksNames[1])
   {
-    disk.obj.style.top =  random_height(disk.radius);
-    disk.obj.style.left = 0 + 'px';
+    pos.x = random_height(disk.radius);
+    pos.y = 0;
   }
 
   else if(disk.obj.id === disksNames[2])
   {
-    disk.obj.style.top =  document.getElementById("container").clientHeight - 2*disk.radius + 'px';
-    disk.obj.style.left = random_width(disk.radius);
+    pos.x = document.getElementById("container").clientHeight - 2*disk.radius;
+    pos.y = random_width(disk.radius);
   }
 
   else if(disk.obj.id === disksNames[3])
   {
-    disk.obj.style.top = random_height(disk.radius);
-    disk.obj.style.left =  document.getElementById("container").clientWidth - 2*disk.radius + 'px';
+    pos.x = random_height(disk.radius);
+    pos.y = document.getElementById("container").clientWidth - 2*disk.radius;
   }
+
+  disk.obj.style.top = pos.x + 'px';
+  disk.obj.style.left = pos.y + 'px'
+  return pos;
 }
 
 // randomize a value from 0 to max rectangle width
 function random_width(radius)
 {
-  return 2*radius + Math.random()*(1000 % (document.getElementById("container").clientWidth - 2*radius)) + 'px';
+  return 2*radius + Math.random()*(1000 % (document.getElementById("container").clientWidth - 2*radius));
 }
 
 
 // randomize a value from 0 to max rectangle height
 function random_height(radius)
 {
-  return (2*radius + Math.random()*(1000 % (document.getElementById("container").clientHeight - 2*radius))) + 'px';
+  return (2*radius + Math.random()*(1000 % (document.getElementById("container").clientHeight - 2*radius)));
 }
