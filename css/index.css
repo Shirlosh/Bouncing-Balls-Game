@@ -1,11 +1,16 @@
 #container {
   position: absolute;
-  height: 100%;
+  height: 95%;
   width: 100%;
   background: black
 }
 
-#disk1, #disk2, #disk3, #disk4 {
+#top {
+  width: 100%;
+  background: black
+}
+
+#disk1, #disk2, #disk3, #disk4{
   position: absolute;
   height: 50px;
   width: 50px;

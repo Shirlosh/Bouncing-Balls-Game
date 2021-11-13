@@ -1,4 +1,4 @@
-let disks = new Array();
+let disks;
 let disksNames = ["disk1", "disk2", "disk3", "disk4"]
 let initialNumOfDisks = disksNames.length;
 
@@ -13,9 +13,9 @@ let counter = 0;
 btn_start.addEventListener('click', handle_start);
 btn_pause.addEventListener('click', handle_pause);
 btn_reset.addEventListener('click', handle_reset);
-
-
 var alertPlaceholder = document.getElementById('message')
+
+
 
 function alert(message, type) {
   var wrapper = document.createElement('div')
@@ -24,15 +24,19 @@ function alert(message, type) {
   alertPlaceholder.append(wrapper)
 }
 
-function startGame()
+function setBoard()
 {
+  disks = new Array();
+  
   for(let i = 0; i < initialNumOfDisks; i++)
   {
     disks.push(new ball(disksNames[i]));
   }
+}
+window.onload = setBoard;
 
-  //showDisks();
-
+function startGame()
+{
   // init random speed
   for (let i= 0; i < disks.length; i++) {
     disks[i].speed.x= 1000*(Math.random()-0.5);
@@ -44,11 +48,17 @@ function handle_start()
 {
   if (init_time_limit())
   {
-    alert('Game Started (message example)!', 'success')
+    alert('Game Started!', 'success')
     showDisks();
-    
+    window.setInterval(function(){
+      updateDisksPositions();
+      checkDisksTouched();
+      handleTimeCheck();
+  }, 10);
+  
     if(disks.length === 0)
     {
+
       startGame();
     }
     else //Resume Game
@@ -65,10 +75,11 @@ function handle_pause()
 
 function handle_reset()
 {
-  for(let i = 0; i < disks.length; i++)
-  {
-    disks.pop();
-  }
+  // for(let i = 0; i < disks.length; i++)
+  // {
+  //   disks.pop();
+  // }
+  setBoard();
   startGame();
 }
 
@@ -81,25 +92,22 @@ function ball(name) {
   this.containerSize= { x: this.obj.offsetParent.offsetWidth, y: this.obj.offsetParent.offsetHeight}
   this.posBoundries= { x: this.containerSize.x-this.size/2, y: this.containerSize.y-this.size/2}
   // init position
-  this.pos= { x: this.radius + 1000*(Math.random()), y: this.radius + 1000*(Math.random())};
+  this.pos= {x:0, y:0} //{ x: this.radius + 1000*(Math.random()), y: this.radius + 1000*(Math.random())};
+  init_disk_position(this);
   // init speed
   this.speed= { x: 0, y: 0 };  
 
   // Update time
   var time = (new Date()).getTime()/1000;
-  
+
+
   // movement to new position
   this.movement = function(x, y){
     this.pos.x= Math.minPos(this.posBoundries.x, Math.maxPos(this.radius, x));
     this.pos.y= Math.minPos(this.posBoundries.y, Math.maxPos(this.posBoundries.y, y));
   };
 
-  window.setInterval(function(){
-      updateDisksPositions();
-      checkDisksTouched();
-      handleTimeCheck();
-  }, 10);
-  
+
   this.updatePosition= function()
   {
     var diskHitWall;
@@ -141,8 +149,6 @@ function ball(name) {
     this.obj.style.top = (this.pos.y - (this.size / 2)) + "px";
   } 
 }
-
-
 
 
 function updateDisksPositions()
@@ -245,4 +251,44 @@ function pauseDisks()
     disks[i].speed.x = 0;
     disks[i].speed.y = 0;
   }
+}
+
+function init_disk_position(disk)
+{
+  if(disk.obj.id === disksNames[0])
+  {
+    disk.obj.style.top = 0 + 'px';
+    disk.obj.style.left = random_width(disk.radius);
+  }
+
+  else if(disk.obj.id === disksNames[1])
+  {
+    disk.obj.style.top =  random_height(disk.radius);
+    disk.obj.style.left = 0 + 'px';
+  }
+
+  else if(disk.obj.id === disksNames[2])
+  {
+    disk.obj.style.top =  document.getElementById("container").clientHeight - 2*disk.radius + 'px';
+    disk.obj.style.left = random_width(disk.radius);
+  }
+
+  else if(disk.obj.id === disksNames[3])
+  {
+    disk.obj.style.top = random_height(disk.radius);
+    disk.obj.style.left =  document.getElementById("container").clientWidth - 2*disk.radius + 'px';
+  }
+}
+
+// randomize a value from 0 to max rectangle width
+function random_width(radius)
+{
+  return 2*radius + Math.random()*(1000 % (document.getElementById("container").clientWidth - 2*radius)) + 'px';
+}
+
+
+// randomize a value from 0 to max rectangle height
+function random_height(radius)
+{
+  return (2*radius + Math.random()*(1000 % (document.getElementById("container").clientHeight - 2*radius))) + 'px';
 }
