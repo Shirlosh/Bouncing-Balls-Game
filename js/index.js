@@ -14,12 +14,12 @@ let pause = false;
 btn_start.addEventListener('click', handle_start);
 btn_pause.addEventListener('click', handle_pause);
 btn_reset.addEventListener('click', handle_reset);
-var alertPlaceholder = document.getElementById('message')
+let alertPlaceholder = document.getElementById('message')
 
 
 
 function alert(message, type) {
-  var wrapper = document.createElement('div')
+  let wrapper = document.createElement('div')
   wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
 
   alertPlaceholder.append(wrapper)
@@ -91,7 +91,7 @@ function Disk(name) {
   this.speed = { x: 1000 * (Math.random() - 0.5), y: 1000 * (Math.random() - 0.5) };
 
   // Update time
-  var time = (new Date()).getTime() / 1000;
+  let time = (new Date()).getTime() / 1000;
 
   this.disable = false;
 
@@ -117,12 +117,12 @@ function Disk(name) {
 
 
   this.updatePosition = function () {
-    var diskHitWall;
+    let diskHitWall;
     function bounce(pos, minPos, maxPos, movement) {
-      var range = maxPos - minPos;
+      let range = maxPos - minPos;
 
       // New position without bounces
-      var newPos = pos + movement;
+      let newPos = pos + movement;
       // Bounce on minPos side
       if (pos - minPos < -movement && -movement < range) {
         diskHitWall = true;
@@ -138,8 +138,8 @@ function Disk(name) {
       return ((newPos + 2 * range) % (2 * range));
     }
 
-    var now = (new Date()).getTime() / 1000;
-    var dt = now - time; // A very small number.
+    let now = (new Date()).getTime() / 1000;
+    let dt = now - time; // A very small number.
     time = now;
     // movement
     this.pos.x = bounce(this.pos.x, this.radius, this.posBoundries.x, this.speed.x * dt);
