@@ -36,14 +36,20 @@ window.onload = setBoard;
 
 
 function handle_start() {
+
+  if(isLastDisk())
+  {
+    return;
+  }
+  
   if (pause === true) {
     pause = false;
   }
 
-  else {
+  else{
 
     if (init_time_limit()) {
-      alert('Game Started!', 'success')
+      alert('Game Started!', 'success');
 
       window.setInterval(function () {
 
@@ -77,20 +83,15 @@ function resetBoard() {
 }
 
 function Disk(name) {
-  // init object
+
   this.name = name;
   this.obj = document.getElementById(name);
-  this.size = this.obj.clientWidth // or clientHeight
-  this.radius = this.size / 2
+  this.size = this.obj.clientWidth;
+  this.radius = this.size / 2;
   this.containerSize = { x: this.obj.offsetParent.offsetWidth, y: this.obj.offsetParent.offsetHeight }
   this.posBoundries = { x: this.containerSize.x - this.size / 2, y: this.containerSize.y - this.size / 2 }
-  // init position
   this.pos = init_disk_position(this);
-
-  // init speed
   this.speed = { x: 1000 * (Math.random() - 0.5), y: 1000 * (Math.random() - 0.5) };
-
-  // Update time
   let time = (new Date()).getTime() / 1000;
 
   this.disable = false;
@@ -174,7 +175,11 @@ function checkDisksTouched() {
         if(generateRandomBoolean())        disks[j].Disable(true);
         else disks[i].Disable(true);
 
-        if(isLastDisk()) handle_pause();
+        if(isLastDisk()) 
+        {
+          handle_pause();
+          handle_endgame();
+        }
       }
     }
   }
@@ -225,12 +230,19 @@ function handleTimeCheck() {
 
   if (counter === time_limit) {
     handle_pause();
+    handle_endgame();
   }
   else {
     counter++;
     showTimer.innerHTML = counter;
   }
 }
+
+function handle_endgame()
+{
+  alert('Game Over', 'success')
+}
+
 
 function init_disk_position(disk) {
   pos = { x: 0, y: 0 };
