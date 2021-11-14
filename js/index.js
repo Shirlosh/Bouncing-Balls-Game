@@ -49,10 +49,7 @@ function handle_start() {
   else{
 
     if (init_time_limit()) {
-      alert('Game Started!', 'success');
-
       window.setInterval(function () {
-
         if (pause === false) {
           updateDisksPositions();
           checkDisksTouched();
@@ -92,7 +89,6 @@ function Disk(name) {
   this.posBoundries = { x: this.containerSize.x - this.size / 2, y: this.containerSize.y - this.size / 2 }
   this.pos = init_disk_position(this);
   this.speed = { x: 1000 * (Math.random() - 0.5), y: 1000 * (Math.random() - 0.5) };
-  let time = (new Date()).getTime() / 1000;
 
   this.disable = false;
 
@@ -139,15 +135,12 @@ function Disk(name) {
       return ((newPos + 2 * range) % (2 * range));
     }
 
-    let now = (new Date()).getTime() / 1000;
-    let dt = now - time; // A very small number.
-    time = now;
     // movement
-    this.pos.x = bounce(this.pos.x, this.radius, this.posBoundries.x, this.speed.x * dt);
+    this.pos.x = bounce(this.pos.x, this.radius, this.posBoundries.x, this.speed.x * 0.01);
     if (diskHitWall)
       this.speed.x = (-this.speed.x);
 
-    this.pos.y = bounce(this.pos.y, this.radius, this.posBoundries.y, this.speed.y * dt);
+    this.pos.y = bounce(this.pos.y, this.radius, this.posBoundries.y, this.speed.y * 0.01);
     if (diskHitWall)
       this.speed.y = (-this.speed.y);
 
@@ -172,7 +165,10 @@ function checkDisksTouched() {
     for (let j = i + 1; j < disks.length; j++) {
 
       if (twoDisksTouched(disks[i], disks[j])) {
-        if(generateRandomBoolean())        disks[j].Disable(true);
+        if(generateRandomBoolean())
+        {
+          disks[j].Disable(true);
+        }
         else disks[i].Disable(true);
 
         if(isLastDisk()) 

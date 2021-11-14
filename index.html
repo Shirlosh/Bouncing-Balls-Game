@@ -12,21 +12,19 @@
 	</head>
 	
 	<body>
-		<div id="top" class="text-center">		 
+		<div id="top" class="text-center">	
+			<div id="message"></div>	 
 			<div class="btn-group" role="group" aria-label="Basic example">
 				<button id='btn_start' class='btn btn-outline-light'>Start</button>
 				<button id='btn_pause' class='btn btn-outline-light'>Pause</button>
 				<button id='btn_reset' class='btn btn-outline-light'>Reset</button>
 				<label for="time_limit" class="form-label"></label>
 				<input type="text" class="form-control" id="time_limit" placeholder="Type Game Time In Ms.">
-		
 				<div id="timer"></div>
 			</div>
 		</div>
 
 		<div id="container" class="text-center">
-			<div id="message"></div>
-
 			<div id="disk1"></div>
 			<div id="disk2"></div>
 			<div id="disk3"></div>
@@ -58,4 +56,17 @@ V• When two discs collide, one of them should evaporate
 V• The process will continue for the time specified by the controller or till just one disk is left on the page
 V• It’s possible to pause and reset the operation.
 • When the process is done, a message (not alert) will appear
-on the page with a summary -->
+on the page with a summary 
+
+
+TODO 1:
+when starting, disks pos need to match with the initial pos.
+
+Solution 1: a function after the start button that pause the call to updatePosition.
+Solution 2: init the disks position to slightly far from the walls.
+
+TODO 2:
+change alert message to modal message. - Rami.
+
+
+-->
