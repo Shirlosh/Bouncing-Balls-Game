@@ -79,8 +79,8 @@ function resetBoard() {
   });
 }
 
-function Disk(name) {
-
+let i = 0;
+function Disk(name) {  
   this.name = name;
   this.obj = document.getElementById(name);
   this.size = this.obj.clientWidth;
@@ -89,7 +89,6 @@ function Disk(name) {
   this.posBoundries = { x: this.containerSize.x - this.size / 2, y: this.containerSize.y - this.size / 2 }
   this.pos = init_disk_position(this);
   this.speed = { x: 1000 * (Math.random() - 0.5), y: 1000 * (Math.random() - 0.5) };
-
   this.disable = false;
 
   this.Disable = function (status){
@@ -240,30 +239,33 @@ function handle_endgame()
 }
 
 
-function init_disk_position(disk) {
+function init_disk_position(disk) 
+{
   pos = { x: 0, y: 0 };
+
   if (disk.obj.id === disksNames[0]) {
-    pos.x = 0;
-    pos.y = random_width(disk.radius);
+    pos.y = 0;
+    pos.x = random_width(disk.radius);
   }
 
   else if (disk.obj.id === disksNames[1]) {
-    pos.x = random_height(disk.radius);
-    pos.y = 0;
+    pos.y = random_height(disk.radius);
+    pos.x = 0;
   }
 
   else if (disk.obj.id === disksNames[2]) {
-    pos.x = document.getElementById("container").clientHeight - 2 * disk.radius;
-    pos.y = random_width(disk.radius);
+    pos.y = document.getElementById("container").clientHeight - 2 * disk.radius;
+    pos.x = random_width(disk.radius);
   }
 
   else if (disk.obj.id === disksNames[3]) {
-    pos.x = random_height(disk.radius);
-    pos.y = document.getElementById("container").clientWidth - 2 * disk.radius;
+    pos.y = random_height(disk.radius);
+    pos.x = document.getElementById("container").clientWidth - 2 * disk.radius;
   }
 
-  disk.obj.style.top = pos.x + 'px';
-  disk.obj.style.left = pos.y + 'px'
+  disk.obj.style.left = pos.x + 'px'
+  disk.obj.style.top = pos.y + 'px';
+
   return pos;
 }
 
