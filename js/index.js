@@ -37,13 +37,13 @@ window.onload = setBoard;
 
 function handle_start() {
 
-  if(isLastDisk())
+  if(isLastDisk() || time_limit === counter )
   {
     return;
   }
   
-  if (pause === true) {
-    
+  if (pause === true) 
+  {  
     if (init_time_limit())  pause = false;
   }
 
@@ -52,9 +52,9 @@ function handle_start() {
     if (init_time_limit()) {
       window.setInterval(function () {
         if (pause === false) {
+          handleTimeCheck();
           updateDisksPositions();
           checkDisksTouched();
-          handleTimeCheck();
         }
       }, 10);
       
@@ -70,6 +70,7 @@ function handle_reset() {
   pause = true;
   resetBoard();
   counter = 0;
+  time_limit = null;
   showTimer.innerHTML = counter;
 }
 
@@ -144,7 +145,7 @@ function Disk(name) {
     if (diskHitWall)
       this.speed.y = (-this.speed.y);
 
-    // movement
+    
     this.obj.style.left = (this.pos.x - (this.size / 2)) + "px";
     this.obj.style.top = (this.pos.y - (this.size / 2)) + "px";
   }
@@ -210,13 +211,19 @@ function init_time_limit() {
     for (let i = 0; i < time.length; i++) {
       const digit = time[i];
       if (digit < '0' || digit > '9') {
-        alert('please enter only numbers')
+        alert('please enter only numbers');
         time_limit = null;
         return false;
       }
     }
     time = Number(time);
   }
+  
+  // if(time_limit != null && time_limit > counter)
+  // {
+  //   alert('please enter greater time limitation');
+  //   return false;
+  // } 
 
   time_limit = time;
   return true;
@@ -232,11 +239,13 @@ function handleTimeCheck() {
     counter++;
     showTimer.innerHTML = counter;
   }
+  
 }
 
 function handle_endgame()
 {
-  alert('Game Over', 'success')
+  alert('Game Over', 'success');
+  
 }
 
 
