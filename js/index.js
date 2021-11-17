@@ -43,7 +43,8 @@ function handle_start() {
   }
   
   if (pause === true) {
-    pause = false;
+    
+    if (init_time_limit())  pause = false;
   }
 
   else{
