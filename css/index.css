@@ -7,14 +7,14 @@
 
 #top {
   width: 100%;
-  background: black
+  background: rgb(51, 51, 51)
 }
 
 #disk1, #disk2, #disk3, #disk4{
   position: absolute;
-  height: 50px;
-  width: 50px;
-  border-radius: 50px;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
 }
 #disk1 {
   background: rgb(255,64,64);

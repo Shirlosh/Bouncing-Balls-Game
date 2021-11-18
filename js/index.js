@@ -1,12 +1,9 @@
 let disks;
-let disksNames = ["disk1", "disk2", "disk3", "disk4"]
-let initialNumOfDisks = disksNames.length;
-
+let num_of_disks = 4;
 
 const btn_start = document.querySelector('#btn_start');
 const btn_pause = document.querySelector('#btn_pause');
 const btn_reset = document.querySelector('#btn_reset');
-const showTimer = document.querySelector('#timer');
 let time_limit = null;
 let counter = 0;
 let pause = false;
@@ -16,49 +13,54 @@ btn_pause.addEventListener('click', handle_pause);
 btn_reset.addEventListener('click', handle_reset);
 let alertPlaceholder = document.getElementById('message')
 
+window.onload = function() 
+{
+    set_board();
+    window.addEventListener("beforeunload", function (e) {
+        e.preventDefault();
+        if (!pause) //game in progress
+        {
+          let message = "";
+          (e || window.event).returnValue = message;
+          return message;
+        }
+    });
+};
 
 
-function alert(message, type) {
-  let wrapper = document.createElement('div')
-  wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
-
-  alertPlaceholder.append(wrapper)
-}
-
-function setBoard() {
+function set_board() 
+{
   disks = new Array();
 
-  for (let i = 0; i < initialNumOfDisks; i++) {
-    disks.push(new Disk(disksNames[i]));
+  for (let i = 0; i < num_of_disks; i++) 
+  {
+    disks.push(new Disk("disk" + (i + 1)));
   }
 }
-window.onload = setBoard;
 
 
-function handle_start() {
-
-  if(isLastDisk() || time_limit === counter )
+function handle_start() 
+{
+  if(is_last_disk() || time_limit === counter )
   {
     return;
   }
-  
+
   if (pause === true) 
   {  
-    if (init_time_limit())  pause = false;
+    if (init_time_limit())
+    {
+      pause = false;
+    } 
   }
-
-  else{
-
-    if (init_time_limit()) {
-      window.setInterval(function () {
-        if (pause === false) {
-          handleTimeCheck();
-          updateDisksPositions();
-          checkDisksTouched();
-        }
-      }, 10);
-      
-    }
+  else if (init_time_limit()) {
+    window.setInterval(function () {
+      if (pause === false) {
+        handle_time_check();
+        update_disks_positions();
+        check_disks_touched();
+      }
+    }, 10);
   }
 }
 
@@ -68,20 +70,18 @@ function handle_pause() {
 
 function handle_reset() {
   pause = true;
-  resetBoard();
+  reset_board();
   counter = 0;
   time_limit = null;
-  showTimer.innerHTML = counter;
 }
 
-function resetBoard() {
+function reset_board() {
   disks.forEach(disk => {
     disk.pos = init_disk_position(disk);
     disk.Disable(false);
   });
 }
 
-let i = 0;
 function Disk(name) {  
   this.name = name;
   this.obj = document.getElementById(name);
@@ -92,7 +92,6 @@ function Disk(name) {
   this.pos = init_disk_position(this);
   this.speed = { x: 1000 * (Math.random() - 0.5), y: 1000 * (Math.random() - 0.5) };
   this.disable = false;
-
   this.Disable = function (status){
 
     if(status === true)
@@ -107,72 +106,71 @@ function Disk(name) {
     }
   };
 
-  // movement to new position
-  this.movement = function (x, y) {
-    this.pos.x = Math.minPos(this.posBoundries.x, Math.maxPos(this.radius, x));
-    this.pos.y = Math.minPos(this.posBoundries.y, Math.maxPos(this.posBoundries.y, y));
-  };
 
+  this.update_position = function () 
+  {
+    let diskHitWall = true;
 
-  this.updatePosition = function () {
-    let diskHitWall;
-    function bounce(pos, minPos, maxPos, movement) {
-      let range = maxPos - minPos;
-
-      // New position without bounces
-      let newPos = pos + movement;
-      // Bounce on minPos side
-      if (pos - minPos < -movement && -movement < range) {
-        diskHitWall = true;
-        return (2 * minPos - newPos);
-      }
-      // Bounce on maxPos side
-      if (maxPos - pos < movement && movement < range) {
-        diskHitWall = true;
-        return (2 * maxPos - newPos);
-      }
-      // No bounce, or even number of bounces
-      diskHitWall = false;
-      return ((newPos + 2 * range) % (2 * range));
-    }
-
-    // movement
-    this.pos.x = bounce(this.pos.x, this.radius, this.posBoundries.x, this.speed.x * 0.01);
+    // update position for each disk
+    this.pos.x = update_pos(this.pos.x, this.radius, this.posBoundries.x, this.speed.x * 0.01);
     if (diskHitWall)
       this.speed.x = (-this.speed.x);
 
-    this.pos.y = bounce(this.pos.y, this.radius, this.posBoundries.y, this.speed.y * 0.01);
+    this.pos.y = update_pos(this.pos.y, this.radius, this.posBoundries.y, this.speed.y * 0.01);
     if (diskHitWall)
       this.speed.y = (-this.speed.y);
 
-    
+    //update the new positions for each disk (on screen)
     this.obj.style.left = (this.pos.x - (this.size / 2)) + "px";
     this.obj.style.top = (this.pos.y - (this.size / 2)) + "px";
+
+    function update_pos(pos, minPos, maxPos, movement) 
+    {
+      let range = maxPos - minPos;
+      let newPos = pos + movement;
+
+      // check wall hit:
+      // hit minPos side
+      if (pos - minPos < -movement && -movement < range) 
+      {
+        diskHitWall = true;
+        return (2 * minPos - newPos);
+      }
+      // hit maxPos side
+      if (maxPos - pos < movement && movement < range) 
+      {
+        diskHitWall = true;
+        return (2 * maxPos - newPos);
+      }
+      diskHitWall = false; //no hit.
+
+      return ((newPos + 2 * range) % (2 * range));
+    }
   }
 }
 
-
-function updateDisksPositions() {
-
-  for (let i = 0; i < disks.length; i++) {
-    disks[i].updatePosition();
+function update_disks_positions() 
+{
+  for (let i = 0; i < disks.length; i++) 
+  {
+    disks[i].update_position();
   }
 }
 
-function checkDisksTouched() {
+function check_disks_touched() {
 
   for (let i = 0; i < disks.length; i++) 
   {
     for (let j = i + 1; j < disks.length; j++) {
 
-      if (twoDisksTouched(disks[i], disks[j])) {
-        if(generateRandomBoolean())
+      if (two_disks_touched(disks[i], disks[j])) {
+        if(generate_random_bool())
         {
           disks[j].Disable(true);
         }
         else disks[i].Disable(true);
 
-        if(isLastDisk()) 
+        if(is_last_disk()) 
         {
           handle_pause();
           handle_endgame();
@@ -182,70 +180,65 @@ function checkDisksTouched() {
   }
 }
 
-function twoDisksTouched(disk1, disk2) {
+function two_disks_touched(disk1, disk2) 
+{
   let xDistance = disk2.pos.x - disk1.pos.x;
   let yDistance = disk2.pos.y - disk1.pos.y;
   return !disk1.disable && !disk2.disable && (Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2)) < disk1.radius + disk2.radius);
 }
 
-function generateRandomBoolean() {
+function generate_random_bool() 
+{
   return Math.round(Math.random())
 }
 
-function isLastDisk()
+function is_last_disk()
 {
   let cnt = 0;
   disks.forEach(d => {
     if (d.disable) cnt++ ;
   });
 
-  return cnt === initialNumOfDisks - 1;
+  return cnt === num_of_disks - 1;
 }
 
-//returns true if time limit is valid
-//otherwise returns false
-function init_time_limit() {
+//returns true if time limit is valid, otherwise returns false
+function init_time_limit() 
+{
   let time = document.querySelector('#time_limit').value;
 
   if (time) {
     for (let i = 0; i < time.length; i++) {
       const digit = time[i];
       if (digit < '0' || digit > '9') {
-        alert('please enter only numbers');
+        message('Please enter only numbers.', "warning");
         time_limit = null;
         return false;
       }
     }
     time = Number(time);
   }
-  
-  // if(time_limit != null && time_limit > counter)
-  // {
-  //   alert('please enter greater time limitation');
-  //   return false;
-  // } 
 
   time_limit = time;
   return true;
 }
 
-function handleTimeCheck() {
-
-  if (counter === time_limit) {
+function handle_time_check() 
+{
+  if (counter === time_limit) 
+  {
     handle_pause();
     handle_endgame();
   }
-  else {
+  else 
+  {
     counter++;
-    showTimer.innerHTML = counter;
   }
-  
 }
 
 function handle_endgame()
 {
-  alert('Game Over', 'success');
-  
+  message('Game Over. Try to beat the time: ' + counter, 'success');
 }
 
 
@@ -253,22 +246,19 @@ function init_disk_position(disk)
 {
   pos = { x: 0, y: 0 };
 
-  if (disk.obj.id === disksNames[0]) {
+  if (disk.obj.id === "disk1") {
     pos.y = 0;
     pos.x = random_width(disk.radius);
   }
-
-  else if (disk.obj.id === disksNames[1]) {
+  else if (disk.obj.id === "disk2") {
     pos.y = random_height(disk.radius);
     pos.x = 0;
   }
-
-  else if (disk.obj.id === disksNames[2]) {
+  else if (disk.obj.id === "disk3") {
     pos.y = document.getElementById("container").clientHeight - 2 * disk.radius;
     pos.x = random_width(disk.radius);
   }
-
-  else if (disk.obj.id === disksNames[3]) {
+  else if (disk.obj.id === "disk4") {
     pos.y = random_height(disk.radius);
     pos.x = document.getElementById("container").clientWidth - 2 * disk.radius;
   }
@@ -281,11 +271,19 @@ function init_disk_position(disk)
 
 // randomize a value from 0 to max rectangle width
 function random_width(radius) {
-  return 2 * radius + Math.random() * (1000 % (document.getElementById("container").clientWidth - 2 * radius));
+  return Math.random() * ((document.getElementById("container").clientWidth - 2 * radius));
 }
 
 
 // randomize a value from 0 to max rectangle height
 function random_height(radius) {
-  return (2 * radius + Math.random() * (1000 % (document.getElementById("container").clientHeight - 2 * radius)));
+  return Math.random() * ((document.getElementById("container").clientHeight - 2 * radius));
+}
+
+
+function message(message, type) {
+  let wrapper = document.createElement('current-message')
+  wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+
+  alertPlaceholder.append(wrapper)
 }
