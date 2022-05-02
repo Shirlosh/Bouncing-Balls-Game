@@ -1,13 +1,10 @@
-• Date: 
-• Name of the exercise: Exercise 1 in JS Course
-• Details about submitters:
-    • Full Name: Shirley Alus
-    • ID Number: 207023813
-    • Email address: Shirleyalus@gmail.com
+Bouncing Balls Browser Game 
 
-    • Full Name: Rami Hamdan
-    • ID Number: 318573102
-    • Email address: ramijoadha@mta.ac.il
+- double click index.html to run the game.
 
-• It might also contain special instructions or comments
 
+When the user press starts, the balls bounce from one side to the other. 
+when 2 balls collide one of them will disappear. the game ends when there is only one ball. 
+a timer is set with the time passed from starting.
+
+good luck
